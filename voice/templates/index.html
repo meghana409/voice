@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voice Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1>🎙️ Voice Assistant</h1>
+
+    <button onclick="startListening()">🎤 Speak</button>
+
+    <p id="status">Click the mic and speak...</p>
+
+    <h3 id="userText"></h3>
+    <h2 id="response"></h2>
+</div>
+
+<script>
+function speak(text) {
+    const speech = new SpeechSynthesisUtterance(text);
+    speechSynthesis.speak(speech);
+}
+
+function startListening() {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+    recognition.onstart = function() {
+        document.getElementById("status").innerText = "Listening...";
+    };
+
+    recognition.onresult = function(event) {
+        const command = event.results[0][0].transcript;
+        document.getElementById("userText").innerText = "You said: " + command;
+
+        fetch('/process', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ command: command })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.type === "text") {
+                document.getElementById("response").innerText = data.data;
+                speak(data.data); // 🔊 speak response
+            } 
+            else if (data.type === "action") {
+                document.getElementById("response").innerText = "Opening...";
+                speak("Opening now");
+                window.open(data.data, "_blank");
+            }
+        });
+    };
+
+    recognition.onerror = function() {
+        document.getElementById("status").innerText = "Error occurred. Try again.";
+    };
+
+    recognition.onend = function() {
+        document.getElementById("status").innerText = "Click the mic and speak...";
+    };
+
+    recognition.start();
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+body {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
+    font-family: Arial;
+    text-align: center;
+}
+
+.container {
+    margin-top: 100px;
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    background: #22c55e;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #16a34a;
+}
+
+#status {
+    margin-top: 15px;
+    color: #94a3b8;
+}
+
+#userText {
+    margin-top: 20px;
+    color: #38bdf8;
+}
+
+#response {
+    margin-top: 20px;
+    color: #facc15;
+}
